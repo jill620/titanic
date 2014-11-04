@@ -81,14 +81,20 @@ train_data = train_df.values
 test_data = test_df.values
 # print train_data[0::,0].shape
 
-print 'Training...'
+#print 'Training...'
 #forest = RandomForestClassifier(n_estimators=100)
 #forest = forest.fit( train_data[0::,1::], train_data[0::,0] )
-LogisR = linear_model.LogisticRegression()
-LogisR.fit( train_data[0::,1::], train_data[0::,0] )
-print 'Predicting...'
-#output = forest.predict(test_data).astype(int)
-
+# print test_data[0::,3:4].shape
+LogisR = linear_model.LogisticRegression(fit_intercept=False)
+LogisFit = LogisR.fit( train_data[0::,0:1], train_data[0::,0] )
+Para = LogisR.get_params();
+print "coefficient"
+print LogisR.coef_.T 
+print "Intercept"
+print LogisR.intercept_
+#print 'Predicting...'
+# output = LogisR.predict(test_data[0::,0:1]).astype(int)
+output = LogisR.predict(test_data[0::,0:1])
 
 predictions_file = open("myfirstforest.csv", "wb")
 open_file_object = csv.writer(predictions_file)
