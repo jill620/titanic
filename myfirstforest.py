@@ -77,16 +77,20 @@ test_df = test_df.drop(['Name', 'Sex', 'Ticket', 'Cabin', 'PassengerId'], axis=1
 
 # The data is now ready to go. So lets fit to the train, then predict to the test!
 # Convert back to a numpy array
-train_data = train_df.values
-test_data = test_df.values
-# print train_data[0::,0].shape
-
+train_data = train_df['Gender'].values[:,np.newaxis] 
+# ['Gender'] selects out only the gender arrays
+# [:, np.newaxis] changes data format from [] to [[]], which actually has a column.
+train_answer = train_df['Survived'].values[:,np.newaxis]
+test_data = test_df['Gender'].values[:,np.newaxis]
+print train_data.shape
+print train_answer.shape
+print test_data.shape
 #print 'Training...'
 #forest = RandomForestClassifier(n_estimators=100)
 #forest = forest.fit( train_data[0::,1::], train_data[0::,0] )
 # print test_data[0::,3:4].shape
-LogisR = linear_model.LogisticRegression(fit_intercept=False)
-LogisFit = LogisR.fit( train_data[0::,0:1], train_data[0::,0] )
+LogisR = linear_model.LogisticRegression(fit_intercept=True)
+LogisR.fit( train_data, train_answer )
 Para = LogisR.get_params();
 print "coefficient"
 print LogisR.coef_.T 
@@ -94,7 +98,9 @@ print "Intercept"
 print LogisR.intercept_
 #print 'Predicting...'
 # output = LogisR.predict(test_data[0::,0:1]).astype(int)
-output = LogisR.predict(test_data[0::,0:1])
+output = LogisR.predict(test_data)
+
+print output
 
 predictions_file = open("myfirstforest.csv", "wb")
 open_file_object = csv.writer(predictions_file)
